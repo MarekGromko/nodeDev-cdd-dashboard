@@ -12,11 +12,13 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
     "@types/pikaday": "^1.7.10",
+    "axios": "^1.13.2",
     "daisyui": "^5.5.8",
     "pikaday": "^1.8.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
+    "recharts": "^3.5.1",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
