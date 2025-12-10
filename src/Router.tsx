@@ -5,7 +5,7 @@ import {
 
 import App from "./App";
 import Login from "./pages/Login";
-import DataDashboard from "./pages/DataDashboard";
+import GlobalDashboard from "./pages/GlobalDashboard";
 
 const router = createBrowserRouter([
     {
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                Component: DataDashboard
+                Component: GlobalDashboard
             }
         ]
     },

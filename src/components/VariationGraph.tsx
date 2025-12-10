@@ -1,35 +1,61 @@
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { getCurrencyFlag } from '../data/flags';
+import { Chart } from 'chart.js/auto';
 
-export default function VariationGraph() {
+export interface VariationGraphProps {
+    code: string   //
+}
+
+export default function VariationGraph(props: VariationGraphProps) {
+    const canvasRef     = useRef<HTMLCanvasElement|null>(null);
+    const chartRef      = useRef<Chart|null>(null);
+    useLayoutEffect(()=>{
+        const data = [
+            { year: 2010, count: 10 },
+            { year: 2011, count: 20 },
+            { year: 2012, count: 15 },
+            { year: 2013, count: 25 },
+            { year: 2014, count: 22 },
+            { year: 2015, count: 30 },
+            { year: 2016, count: 28 },
+        ];
+        const chart = new Chart(canvasRef.current!.getContext('2d')!,{
+            type: 'line',
+            data: {
+                labels: data.map(row => row.year),
+                datasets: [
+                {
+                    label: 'Acquisitions by year',
+                    data: data.map(row => row.count)
+                }
+                ]
+            }
+        });
+        return ()=>chart.destroy();
+    });
+    const [timeframe, setTimeframe] = useState("week");
+    switch (timeframe) {
+        case "week":
+            // TODO fetch data for last week
+            break;
+        case "months":
+            // TODO fetch data for last months
+            break;
+        case "year":
+            // TODO fetch data for last year
+            break;
+    }
     return (
-        <div>
-            <div>Variation graph</div>
-            <LineChart
-                style={{ width: '100%', maxWidth: '700px', height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
-                responsive
-                data={[{
-                        name: 'Page A',
-                        uv: 4000,
-                        pv: 2400,
-                        amt: 2400,
-                    }]}
-                margin={{
-                    top: 5,
-                    right: 0,
-                    left: 0,
-                    bottom: 5,
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis width="auto" />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                <Line type="monotone" dataKey="amt" stroke="#82ca9d" />
-        </LineChart>
+        <div className='flex flex-col gap-2 items-center'>
+            <div>Variation graph for {getCurrencyFlag(props.code)} {props.code}</div>
+            <select defaultValue="Pick a color" className="select" onChange={x=> setTimeframe(x.target.value)}>
+                <option disabled={true}>Pick a timeframe</option>
+                <option selected={true} value="week">Last week</option>
+                <option value="months">Last months</option>
+                <option value="year">Last year</option>
+            </select>
+            <canvas ref={canvasRef}/>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { currencyList, currencyMap } from "../data/currencies";
+import { currencyList } from "../data/currencies";
 import { getCurrencyFlag } from "../data/flags";
 
 export interface CodeSelectionProps {
@@ -11,9 +11,12 @@ export interface CodeSelectionProps {
 export default function CodeSelection(props: CodeSelectionProps) {
     const [searchParam, setSearchParam] = useState<string>('');
     return (<>
-        <button className="btn btn-primary" popoverTarget="popover-1" style={{ anchorName: props.name } /* as React.CSSProperties */}>
-            {getCurrencyFlag(props.value)} {props.value}
-        </button>
+        <div className="m-8">
+            <span className="label-text mr-4">Select currency code:</span>
+            <button className="btn" popoverTarget="popover-1" style={{ anchorName: props.name } /* as React.CSSProperties */}>
+                {getCurrencyFlag(props.value)} {props.value}
+            </button>
+        </div>
 
         <ul className="dropdown menu w-52 rounded-box bg-base-100 shadow-sm max-h-96 overflow-y-auto"
             popover="auto" 
