@@ -1,15 +1,14 @@
 import {
     useEffect,
-    useLayoutEffect,
     useRef,
     useState 
 } from "react"
 import { fetchGlobalRates, type Api } from "../../api"
-import type { AxiosError } from "axios";
 import GraphError from "../GraphError";
 import GraphShimmer from "../GraphShimmer";
 import { Chart } from "chart.js/auto";
 import Pikaday from "pikaday";
+import { useChartEffect } from "../../hooks/useChartEffect";
 
 function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalTimestampedRate) {
     const rates = data.rates.sort((a, b) => a.rate-b.rate);
@@ -32,34 +31,20 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalTimestampedRate) {
 
 function GlobalDeltaRatesChart(props: {date: string}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [rates, setRates] = useState<Api.GlobalTimestampedRate | AxiosError | null>(null);
-    const isError = rates !== null && (rates as AxiosError).isAxiosError;
-    const isLoading = rates === null;
-
-    useEffect(()=>{
-        setRates(null);
-        fetchGlobalRates(new Date(props.date))
-        .then(res=>{
-            setRates(res);
-        })
-        .catch(e=>{
-            setRates(e as AxiosError);
-        });
-    }, [props.date]);
-
-    useLayoutEffect(()=>{
-        if(!canvasRef.current) return;
-        if(isError || isLoading) return;
-        const chart = makeChart(canvasRef.current, rates as Api.GlobalTimestampedRate);
-        return ()=>chart.destroy();
-    }, [rates]);
-    if(isLoading)
-        return <GraphShimmer />;
-    if(isError)
-        return <GraphError axiosError={rates as AxiosError} />;
-    return <canvas 
-        ref={canvasRef}
-    />
+    const {state, data} = useChartEffect<Api.GlobalTimestampedRate>({
+        canvasRef:  canvasRef,
+        fetcher: ()=>fetchGlobalRates(new Date(props.date)),
+        drawer:  (canvas, data)=>makeChart(canvas, data),
+        fetchDeps: [props.date]
+    });
+    switch(state) {
+        case 'loading':
+            return <GraphShimmer />;
+        case 'error':
+            return <GraphError axiosError={data} />;
+        case 'ready':
+            return <canvas ref={canvasRef}/>
+    }
 }
 
 export default function GlobalRates() {

@@ -1,6 +1,4 @@
 import { 
-    useEffect,
-    useLayoutEffect,
     useRef,
     useState 
 } from "react"
@@ -10,6 +8,7 @@ import type { AxiosError } from "axios";
 import GraphError from "../GraphError";
 import GraphShimmer from "../GraphShimmer";
 import { Chart } from "chart.js/auto";
+import { useChartEffect } from "../../hooks/useChartEffect";
 
 function makeChart(canvas: HTMLCanvasElement, data: Api.TimeframeDeltaRates) {
     return new Chart(canvas.getContext('2d')!, {
@@ -31,35 +30,21 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.TimeframeDeltaRates) {
 
 function GlobalDeltaRatesChart(props: {timeframe: string}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [rates, setRates] = useState<Api.TimeframeDeltaRates | AxiosError | null>(null);
+    const {data, state} = useChartEffect<Api.TimeframeDeltaRates>({
+        canvasRef:  canvasRef,
+        fetcher: ()=>fetchGlobalDeltaRates(...unwrapTimeframe(props.timeframe)),
+        drawer:  (canvas, data)=>makeChart(canvas, data),
+        fetchDeps: [props.timeframe]
+    });
 
-    const isError   = rates !== null && (rates as AxiosError).isAxiosError;
-    const isLoading = rates === null;
-
-    useEffect(()=>{
-        setRates(null);
-        fetchGlobalDeltaRates(...unwrapTimeframe(props.timeframe))
-        .then(res=>{
-            setRates(res);
-        })
-        .catch(e=>{
-            setRates(e as AxiosError);
-        });
-    }, [props.timeframe]);
-
-    useLayoutEffect(()=>{
-        if(!canvasRef.current) return;
-        if(isError || isLoading) return;
-        const chart = makeChart(canvasRef.current, rates as Api.TimeframeDeltaRates);
-        return ()=>chart.destroy();
-    }, [rates]);
-
-    if(isLoading)
-        return <GraphShimmer />;
-    if(isError)
-        return <GraphError axiosError={rates as AxiosError} />;
-
-    return <canvas ref={canvasRef}/>
+    switch(state) {
+        case 'loading':
+            return <GraphShimmer />;
+        case 'error':
+            return <GraphError axiosError={data as AxiosError} />;
+        case 'ready':
+            return <canvas ref={canvasRef}/>
+    }
 }
 
 export default function GlobalDeltaRates() {

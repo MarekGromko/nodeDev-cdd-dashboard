@@ -9,13 +9,13 @@ export default function Tabs() {
     return (
         <div className="dock dock-xl justify-center bg-base-100">
             <Link to='/' className={dataPage ? "dock-active" : ""}>
-                <Icons.IoAnalyticsOutline size="1.5em"/>
-                <span className="dock-label">Home</span>
+                <Icons.IoEarthOutline size="1.5em"/>
+                <span className="dock-label">Global</span>
             </Link>
             
             <Link to='/compare' className={comparePage ? "dock-active" : ""}>
-                <Icons.IoSwapHorizontalOutline size="1.5em"/>
-                <span className="dock-label">Compare</span>
+                <Icons.IoAnalyticsOutline size="1.5em"/>
+                <span className="dock-label">Currency</span>
             </Link>
             
             <Link to='/settings' className={settingsPage ? "dock-active" : ""}>

@@ -5,7 +5,6 @@ const api = axios.create({baseURL: 'http://localhost:3000/api'});
 
 mockApi(api);
 
-
 export namespace Api {
     export interface TimeframeRates {
         code: string;
@@ -45,7 +44,7 @@ export async function fetchGlobalRates(date: Date): Promise<Api.GlobalTimestampe
 }
 
 export async function fetchUnstableRates(date: Date) {
-    const response = await api.get<Api.TimeframeRates>('/unstable-rates', {
+    const response = await api.get<Api.UnstableRates>('/unstable-rates', {
         params: {
             date: date.toISOString()
         }

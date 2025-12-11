@@ -7,7 +7,7 @@ interface GraphErrorProps {
 export default function GraphError(props: GraphErrorProps) {
 
     return (
-        <div role="alert"className="alert alert-error alert-soft">
+        <div role="alert"className="alert alert-error alert-soft w-full h-full items-baseline">
             <div>
                 <div>An error occured!</div>
                 {props.axiosError && (
