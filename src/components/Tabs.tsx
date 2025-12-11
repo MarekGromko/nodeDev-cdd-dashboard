@@ -3,7 +3,7 @@ import { Link, useMatch } from 'react-router';
 
 export default function Tabs() {
     const dataPage      = useMatch('/');
-    const comparePage   = useMatch('/compare');
+    const comparePage   = useMatch('/currency');
     const settingsPage  = useMatch('/settings');
 
     return (
@@ -13,7 +13,7 @@ export default function Tabs() {
                 <span className="dock-label">Global</span>
             </Link>
             
-            <Link to='/compare' className={comparePage ? "dock-active" : ""}>
+            <Link to='/currency' className={comparePage ? "dock-active" : ""}>
                 <Icons.IoAnalyticsOutline size="1.5em"/>
                 <span className="dock-label">Currency</span>
             </Link>

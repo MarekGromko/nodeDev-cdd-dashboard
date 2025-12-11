@@ -10,7 +10,7 @@ import { Chart } from "chart.js/auto";
 import Pikaday from "pikaday";
 import { useChartEffect } from "../../hooks/useChartEffect";
 
-function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalTimestampedRate) {
+function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalRates) {
     const rates = data.rates.sort((a, b) => a.rate-b.rate);
     return new Chart(canvas.getContext('2d')!, {
         type: 'bar',
@@ -18,11 +18,11 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalTimestampedRate) {
             aspectRatio: 1.6
         },
         data: {
-            labels: rates.map(x=>x.code),
+            labels: rates.map(rate=>rate.code),
             datasets: [
             {
                 label: "Global currencies rates",
-                data: rates.map(x=>x.rate)
+                data: rates.map(rate=>rate.rate)
             }
             ]
         }
@@ -31,7 +31,7 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalTimestampedRate) {
 
 function GlobalDeltaRatesChart(props: {date: string}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const {state, data} = useChartEffect<Api.GlobalTimestampedRate>({
+    const {state, data} = useChartEffect<Api.GlobalRates>({
         canvasRef:  canvasRef,
         fetcher: ()=>fetchGlobalRates(new Date(props.date)),
         drawer:  (canvas, data)=>makeChart(canvas, data),

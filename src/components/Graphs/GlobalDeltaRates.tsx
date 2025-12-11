@@ -2,7 +2,7 @@ import {
     useRef,
     useState 
 } from "react"
-import { fetchGlobalDeltaRates, type Api } from "../../api"
+import { fetchGlobalDeltas, type Api } from "../../api"
 import { unwrapTimeframe } from "../../helpers/helpers";
 import type { AxiosError } from "axios";
 import GraphError from "../GraphError";
@@ -10,29 +10,28 @@ import GraphShimmer from "../GraphShimmer";
 import { Chart } from "chart.js/auto";
 import { useChartEffect } from "../../hooks/useChartEffect";
 
-function makeChart(canvas: HTMLCanvasElement, data: Api.TimeframeDeltaRates) {
+function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalDeltas) {
+    console.log(data);
     return new Chart(canvas.getContext('2d')!, {
         type: 'line',
         options: {
             aspectRatio: 1.6
         },
         data: {
-            labels: data.deltaRate.map(x=>new Date(x.date).toLocaleDateString()),
-            datasets: [
-            {
+            labels: data.deltas.map(delta=>new Date(delta.date).toLocaleDateString()),
+            datasets: [{
                 label: "Global currency change of rates",
-                data: data.deltaRate.map(x=>x.delta)
-            }
-            ]
+                data: data.deltas.map(delta=>delta.delta)
+            }]
         }
     });
 }
 
 function GlobalDeltaRatesChart(props: {timeframe: string}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const {data, state} = useChartEffect<Api.TimeframeDeltaRates>({
+    const {data, state} = useChartEffect<Api.GlobalDeltas>({
         canvasRef:  canvasRef,
-        fetcher: ()=>fetchGlobalDeltaRates(...unwrapTimeframe(props.timeframe)),
+        fetcher: ()=>fetchGlobalDeltas(...unwrapTimeframe(props.timeframe)),
         drawer:  (canvas, data)=>makeChart(canvas, data),
         fetchDeps: [props.timeframe]
     });

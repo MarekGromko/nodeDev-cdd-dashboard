@@ -6,6 +6,7 @@ import {
 import App from "./App";
 import Login from "./pages/Login";
 import GlobalDashboard from "./pages/GlobalDashboard";
+import CurrencyDashboard from "./pages/CurrencyDashboard";
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
             {
                 index: true,
                 Component: GlobalDashboard
+            },
+            {
+                path: 'currency',
+                Component: CurrencyDashboard
             }
         ]
     },
