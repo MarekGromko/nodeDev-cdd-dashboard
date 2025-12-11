@@ -3,12 +3,13 @@ import { currencyList } from "../data/currencies";
 import { getCurrencyFlag } from "../data/flags";
 import CurrencyInfo from "../components/CurrencyInfo";
 import { useSearchParams } from "react-router";
+import CurrencyRates from "../components/graphs/CurrencyRates";
 
 
 export default function GlobalDashboard() {
     const [searchParams] = useSearchParams({code: 'USD'});
     const [hint, setHint] = useState<string>('');
-    
+    const code = searchParams.get('code')!
     return (<div className="flex flex-col gap-4">
         <div className="drawer">
             <input id="my-drawer-1" type="checkbox" className="drawer-toggle" />
@@ -39,7 +40,8 @@ export default function GlobalDashboard() {
                 </ul>
             </div>
         </div>
-        <CurrencyInfo code={searchParams.get('code')!} />
+        <CurrencyInfo code={code} />
+        <CurrencyRates code={code} />
         <div className="h-32"/>
     </div>);
 }

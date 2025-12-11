@@ -2,7 +2,7 @@ import {
     useRef,
     useState 
 } from "react"
-import { fetchGlobalDeltas, type Api } from "../../api"
+import { fetchRates, type Api } from "../../api"
 import { unwrapTimeframe } from "../../helpers/helpers";
 import type { AxiosError } from "axios";
 import GraphError from "../GraphError";
@@ -10,7 +10,7 @@ import GraphShimmer from "../GraphShimmer";
 import { Chart } from "chart.js/auto";
 import { useChartEffect } from "../../hooks/useChartEffect";
 
-function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalDeltas) {
+function makeChart(canvas: HTMLCanvasElement, data: Api.Rates) {
     console.log(data);
     return new Chart(canvas.getContext('2d')!, {
         type: 'line',
@@ -18,22 +18,22 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalDeltas) {
             aspectRatio: 1.6
         },
         data: {
-            labels: data.deltas.map(delta=>new Date(delta.date).toLocaleDateString()),
+            labels: data.rates.map(rate=>new Date(rate.date).toLocaleDateString()),
             datasets: [{
-                label: "Global currency change of rates",
-                data: data.deltas.map(delta=>delta.delta)
+                label: "Curerncy rate",
+                data: data.rates.map(rate=>rate.rate)
             }]
         }
     });
 }
 
-function GlobalDeltaRatesChart(props: {timeframe: string}) {
+function CurrencyRatesChart(props: {code: string, timeframe: string}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const {data, state} = useChartEffect<Api.GlobalDeltas>({
+    const {data, state} = useChartEffect<Api.Rates>({
         canvasRef:  canvasRef,
-        fetcher: ()=>fetchGlobalDeltas(...unwrapTimeframe(props.timeframe)),
+        fetcher: ()=>fetchRates(props.code, ...unwrapTimeframe(props.timeframe)),
         drawer:  (canvas, data)=>makeChart(canvas, data),
-        fetchDeps: [props.timeframe]
+        fetchDeps: [props.timeframe, props.code]
     });
 
     switch(state) {
@@ -46,7 +46,11 @@ function GlobalDeltaRatesChart(props: {timeframe: string}) {
     }
 }
 
-export default function LocalRates() {
+interface CurrencyRatesProps {
+    code: string;
+}
+
+export default function CurrencyRates(props: CurrencyRatesProps) {
     const [timeframe, setTimeframe] = useState("month");
     return (
         <div>
@@ -58,7 +62,7 @@ export default function LocalRates() {
                 <option value="year">Year</option>
             </select>
             <div className="m-2" style={{aspectRatio: "1.6 / 1"}}>
-                <GlobalDeltaRatesChart timeframe={timeframe}/>
+                <CurrencyRatesChart timeframe={timeframe} code={props.code}/>
             </div>
         </div>
     )
