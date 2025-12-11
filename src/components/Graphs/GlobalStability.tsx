@@ -24,7 +24,7 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalStability) {
     });
 }
 
-function UnstableRatesChart(props: any) {
+function GlobalStabilityChart(props: any) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const { state, data } = useChartEffect({
         canvasRef:  canvasRef,
@@ -41,12 +41,12 @@ function UnstableRatesChart(props: any) {
     }
 }
 
-export default function UnstableRates() {
+export default function GlobalStability() {
     return (
         <div>
             <div className="text-lg font-bold m-2">Unstables Rates</div>
             <div className="m-2" style={{aspectRatio: "1.6 / 1"}}>
-                <UnstableRatesChart date={new Date().toISOString()}/>
+                <GlobalStabilityChart date={new Date().toISOString()}/>
             </div>
         </div>
     )

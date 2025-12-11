@@ -89,7 +89,6 @@ export async function fetchGlobalStability(date: Date) {
 }
 
 // single api //
-
 export async function fetchRate(code: string, date: Date) {
     const response = await api.get<Api.Rate>('/rate', {
         params: {

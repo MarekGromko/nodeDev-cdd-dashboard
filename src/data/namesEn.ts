@@ -152,4 +152,4 @@ export const currenciesName = {
     "YER": "yemeni rial",
     "ZAR": "south african rand",
     "ZMW": "zambian kwacha"
-} as const;
+};
