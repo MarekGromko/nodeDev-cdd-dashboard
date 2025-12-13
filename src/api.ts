@@ -44,15 +44,18 @@ export namespace Api {
             rate: number
         }[];
     }
-    export interface Deltas{
+    export interface PredictionRates {
         code: string;
-        timeframe: Timeframe;
-        deltas: {
+        rates: {
             date: string;
-            delta: number
-        }[]
+            rate: number;
+        }[];
+        predictionRates: {
+            date: string;
+            rate: number;
+        }[];
     }
-    export interface Stability{
+    export interface Stability {
         code: string;
         timeframe: Timeframe;
         stability: number;
@@ -88,9 +91,19 @@ export async function fetchGlobalStability(date: Date) {
     return response.data;
 }
 
-// single api //
+// currencu api //
 export async function fetchRate(code: string, date: Date) {
-    const response = await api.get<Api.Rate>('/rate', {
+    const response = await api.get<Api.Rate>('rate', {
+        params: {
+            code,
+            date: date.toISOString()
+        }
+    });
+    return response.data;
+}
+
+export async function fetchStability(code: string, date: Date) {
+    const response = await api.get<Api.Stability>('stability', {
         params: {
             code,
             date: date.toISOString()
@@ -100,7 +113,7 @@ export async function fetchRate(code: string, date: Date) {
 }
 
 export async function fetchRates(code: string, start: Date, end: Date) {
-    const response = await api.get<Api.Rates>('/rates', {
+    const response = await api.get<Api.Rates>('rates', {
         params: {
             code,
             start: start.toISOString(),
@@ -110,29 +123,8 @@ export async function fetchRates(code: string, start: Date, end: Date) {
     return response.data;
 }
 
-export async function fetchDeltas(code: string, start: Date, end: Date) {
-    const response = await api.get<Api.Deltas>('/deltas', {
-        params: {
-            code,
-            start: start.toISOString(),
-            end: end.toISOString()
-        }
-    });
-    return response.data;
-}
-
-export async function fetchStability(code: string, date: Date) {
-    const response = await api.get<Api.Stability>('/stability', {
-        params: {
-            code,
-            date: date.toISOString()
-        }
-    });
-    return response.data;
-}
-
-export async function fetchPredictRates(code: string) {
-    const response = await api.get<Api.Rates>("/predict-rates", {
+export async function fetchPredictionRates(code: string) {
+    const response = await api.get<Api.PredictionRates>("prediction/rates", {
         params: {
             code
         }

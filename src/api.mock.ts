@@ -51,17 +51,60 @@ function mockGlobalStability(_: any): Api.GlobalStability {
     }
 }
 
+function mockRates(opts: any): Api.Rates {
+    return {
+        code: opts.code,
+        timeframe: {
+            start: new Date(Date.now() - 30*24*60*60*1000).toISOString(),
+            end: new Date().toISOString()
+        },
+        rates: Array.from({length: 30}, (_, i)=>{
+            const date = new Date(Date.now() - i * 24*60*60*1000);
+            return {
+                date: date.toISOString(),
+                rate: faker.number.float({min: 0.5, max: 2.0, fractionDigits: 4})
+            }
+        })
+    }
+}
+
+function mockPredictionRates(opts: any): Api.PredictionRates {
+    const rates = Array.from({length: 30}, (_, i)=>{
+        const date = new Date(Date.now() - i * 24*60*60*1000);
+        return {
+            date: date.toISOString(),
+            rate: faker.number.float({min: 0.5, max: 2.0, fractionDigits: 4})
+        }
+    });
+    const predictionRates = Array.from({length: 7}, (_, i)=>{
+        const date = new Date(Date.now() + i * 24*60*60*1000);
+        return {
+            date: date.toISOString(),
+            rate: faker.number.float({min: 0.5, max: 2.0, fractionDigits: 4})
+        }
+    });
+    return {
+        code: opts.code,
+        rates,
+        predictionRates
+    }
+}
+
 export const mockApi = (axios: any): any => {
-    axios.get = async (url: string, ..._: any[]) => {
+    axios.get = async (url: string, opts: any) => {
         await sleep(DELAY_MS);
         var data: any;
         switch(url) {
             case 'global/rates': 
-                data = mockGlobalRates({}); break;
+                data = mockGlobalRates(opts); break;
             case 'global/deltas':
-                data = mockGlobalDeltas({}); break;
+                data = mockGlobalDeltas(opts); break;
             case 'global/stability': 
-                data = mockGlobalStability({}); break;
+                data = mockGlobalStability(opts); break;
+            case 'rates':
+                data = mockRates(opts.params); break;
+            case 'prediction/rates':
+                data = mockPredictionRates(opts.params); break;
             default: throw new AxiosError("Not Found", "404");
         }
         return {

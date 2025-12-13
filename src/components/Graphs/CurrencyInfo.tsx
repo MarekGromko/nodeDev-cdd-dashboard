@@ -1,5 +1,5 @@
-import { getCurrencyFlag } from "../data/flags";
-import { currenciesName } from "../data/namesEn";
+import { getCurrencyFlag } from "../../data/flags";
+import { currenciesName } from "../../data/namesEn";
 
 interface CurrencyInfoProps {
     code: string;
@@ -20,11 +20,11 @@ export default function CurrencyInfo(props: CurrencyInfoProps) {
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-sm">
                     <div className="w-14">Rate: </div>
-                    <div className="badge badge-soft badge-info w-16">1.32</div>
+                    <div className="badge badge-soft badge-info w-16 text-lg">1.32</div>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                     <div className="w-14">Stability: </div>
-                    <div className="badge badge-soft badge-info w-16">1.32</div>
+                    <div className="badge badge-soft badge-info w-16 text-lg">1.32</div>
                 </div>
             </div>
         </div>

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { currencyList } from "../data/currencies";
 import { getCurrencyFlag } from "../data/flags";
-import CurrencyInfo from "../components/CurrencyInfo";
 import { useSearchParams } from "react-router";
+import CurrencyInfo from "../components/graphs/CurrencyInfo";
 import CurrencyRates from "../components/graphs/CurrencyRates";
+import CurrencyPredictionRates from "../components/graphs/CurrencyPredictionRates";
 
 
 export default function GlobalDashboard() {
@@ -42,6 +43,7 @@ export default function GlobalDashboard() {
         </div>
         <CurrencyInfo code={code} />
         <CurrencyRates code={code} />
+        <CurrencyPredictionRates code={code} />
         <div className="h-32"/>
     </div>);
 }
