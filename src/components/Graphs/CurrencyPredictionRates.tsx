@@ -9,19 +9,32 @@ import { Chart } from "chart.js/auto";
 import { useChartEffect } from "../../hooks/useChartEffect";
 
 function makeChart(canvas: HTMLCanvasElement, data: Api.PredictionRates) {
+    const labels = [
+        ...data.rates.map(rate=>new Date(rate.date).toLocaleDateString()),
+        ...data.forecast.map(forecast=>forecast.day.toString())
+    ];
+    const nulls = new Array(data.rates.length-1).fill(null);
+    nulls.push(data.rates.at(-1)!.rate);
+
     return new Chart(canvas.getContext('2d')!, {
         type: 'line',
         options: {
             aspectRatio: 1.6
         },
         data: {
-            labels: [...data.rates.map(rate=>new Date(rate.date).toLocaleDateString()), ...data.predictionRates.map(rate=>new Date(rate.date).toLocaleDateString())],
+            labels: labels,
             datasets: [{
                 label: "Currency rates",
                 data: data.rates.map(rate=>rate.rate)
             }, {
-                label: "Predicted rates",
-                data: [...Array.from({length: data.rates.length}).fill(null), ...data.predictionRates.map(rate=>rate.rate)] as number[]
+                label: "Median",
+                data: [...nulls, ...data.forecast.map(forecast=>forecast.med)],
+            }, {
+                label: "Minimum",
+                data: [...nulls, ...data.forecast.map(forecast=>forecast.min)],
+            }, {
+                label: "Maximum",
+                data: [...nulls, ...data.forecast.map(forecast=>forecast.max)],
             }]
         }
     });

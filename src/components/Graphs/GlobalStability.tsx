@@ -8,7 +8,7 @@ import { Chart } from "chart.js/auto";
 import { useChartEffect } from "../../hooks/useChartEffect";
 
 function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalStability) {
-    const rates = data.stabilities.sort((a, b) => a.stability-b.stability).slice(0,10);
+    const rates = data.stabilities.slice(0,10);
     return new Chart(canvas.getContext('2d')!, {
         type: 'pie',
         options: {

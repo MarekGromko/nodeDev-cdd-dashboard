@@ -1,4 +1,5 @@
-import { type Api } from "./api";
+import { type Api } from "./api.dto";
+import { routes } from "./api";
 import { faker } from "@faker-js/faker";
 import { currencyMap } from "./data/currencies";
 import { AxiosError } from "axios";
@@ -68,43 +69,19 @@ function mockRates(opts: any): Api.Rates {
     }
 }
 
-function mockPredictionRates(opts: any): Api.PredictionRates {
-    const rates = Array.from({length: 30}, (_, i)=>{
-        const date = new Date(Date.now() - i * 24*60*60*1000);
-        return {
-            date: date.toISOString(),
-            rate: faker.number.float({min: 0.5, max: 2.0, fractionDigits: 4})
-        }
-    });
-    const predictionRates = Array.from({length: 7}, (_, i)=>{
-        const date = new Date(Date.now() + i * 24*60*60*1000);
-        return {
-            date: date.toISOString(),
-            rate: faker.number.float({min: 0.5, max: 2.0, fractionDigits: 4})
-        }
-    });
-    return {
-        code: opts.code,
-        rates,
-        predictionRates
-    }
-}
-
 export const mockApi = (axios: any): any => {
     axios.get = async (url: string, opts: any) => {
         await sleep(DELAY_MS);
         var data: any;
         switch(url) {
-            case 'global/rates': 
+            case routes.ANALYSIS_GLOBAL_RATES: 
                 data = mockGlobalRates(opts); break;
-            case 'global/deltas':
+            case routes.ANALYSIS_GLOBAL_DELTAS:
                 data = mockGlobalDeltas(opts); break;
-            case 'global/stability': 
+            case routes.ANALYSIS_GLOBAL_STABILITY: 
                 data = mockGlobalStability(opts); break;
-            case 'rates':
+            case routes.ANALYSIS_RATES:
                 data = mockRates(opts.params); break;
-            case 'prediction/rates':
-                data = mockPredictionRates(opts.params); break;
             default: throw new AxiosError("Not Found", "404");
         }
         return {

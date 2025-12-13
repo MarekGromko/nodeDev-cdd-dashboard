@@ -15,7 +15,12 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalRates) {
     return new Chart(canvas.getContext('2d')!, {
         type: 'bar',
         options: {
-            aspectRatio: 1.6
+            aspectRatio: 1.6,
+            scales: {
+                y: {
+                    type: 'logarithmic'
+                }
+            }
         },
         data: {
             labels: rates.map(rate=>rate.code),
@@ -26,6 +31,7 @@ function makeChart(canvas: HTMLCanvasElement, data: Api.GlobalRates) {
             }
             ]
         }
+        
     });
 }
 

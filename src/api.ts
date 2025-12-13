@@ -1,70 +1,26 @@
 import axios from "axios";
-import { mockApi } from "./api.mock";
+//import { mockApi } from "./api.mock";
+import type { Api } from "./api.dto";
 
-const api = axios.create({baseURL: 'http://localhost:3000/api'});
+export type { Api };
 
-mockApi(api);
-
-export namespace Api {
-    interface Timeframe {
-        start: string;
-        end: string;
-    }
-    export interface GlobalRates {
-        timestamp: string;
-        rates: {
-            code: string;
-            rate: number;
-        }[];
-    }
-    export interface GlobalDeltas {
-        timeframe: Timeframe
-        deltas: { 
-            date: string
-            delta: number
-        }[];
-    }
-    export interface GlobalStability{
-        timeframe: Timeframe,
-        stabilities: {
-            code: string;
-            stability: number;
-        }[]
-    }
-    export interface Rate{
-        code: string;
-        timestamp: string;
-        rate: number;
-    }
-    export interface Rates{
-        code: string;
-        timeframe: Timeframe;
-        rates: {
-            date: string;
-            rate: number
-        }[];
-    }
-    export interface PredictionRates {
-        code: string;
-        rates: {
-            date: string;
-            rate: number;
-        }[];
-        predictionRates: {
-            date: string;
-            rate: number;
-        }[];
-    }
-    export interface Stability {
-        code: string;
-        timeframe: Timeframe;
-        stability: number;
-    }
+export const routes = {
+    ANALYSIS_GLOBAL_RATES:      'analysis/global/rates',
+    ANALYSIS_GLOBAL_DELTAS:     'analysis/global/deltas',
+    ANALYSIS_GLOBAL_STABILITY:  'analysis/global/stability',
+    ANALYSIS_RATE:              'analysis/code/rate',
+    ANALYSIS_RATES:             'analysis/code/rates',
+    ANALYSIS_STABILITY:         'analysis/code/stability',
+    ANALYSIS_PREDICTION_RATES:  'analysis/code/prediction/rates'
 }
+
+const api = axios.create({baseURL: import.meta.env.VITE_API_BASE_URL || '/api'});
+
+//mockApi(api);
 
 // global api //
 export async function fetchGlobalRates(date: Date) {
-    const response = await api.get<Api.GlobalRates>('global/rates', {
+    const response = await api.get<Api.GlobalRates>(routes.ANALYSIS_GLOBAL_RATES, {
         params: {
             date: date.toISOString()
         }
@@ -73,7 +29,7 @@ export async function fetchGlobalRates(date: Date) {
 }
 
 export async function fetchGlobalDeltas(start: Date, end: Date) {
-    const response = await api.get<Api.GlobalDeltas>('global/deltas', {
+    const response = await api.get<Api.GlobalDeltas>(routes.ANALYSIS_GLOBAL_DELTAS, {
         params: {
             start: start.toISOString(),
             end: end.toISOString()
@@ -83,7 +39,7 @@ export async function fetchGlobalDeltas(start: Date, end: Date) {
 }
 
 export async function fetchGlobalStability(date: Date) {
-    const response = await api.get<Api.GlobalStability>('global/stability', {
+    const response = await api.get<Api.GlobalStability>(routes.ANALYSIS_GLOBAL_STABILITY, {
         params: {
             date: date.toISOString()
         }
@@ -93,7 +49,7 @@ export async function fetchGlobalStability(date: Date) {
 
 // currencu api //
 export async function fetchRate(code: string, date: Date) {
-    const response = await api.get<Api.Rate>('rate', {
+    const response = await api.get<Api.Rate>(routes.ANALYSIS_RATE.replace('code', code), {
         params: {
             code,
             date: date.toISOString()
@@ -103,7 +59,7 @@ export async function fetchRate(code: string, date: Date) {
 }
 
 export async function fetchStability(code: string, date: Date) {
-    const response = await api.get<Api.Stability>('stability', {
+    const response = await api.get<Api.Stability>(routes.ANALYSIS_STABILITY.replace('code', code), {
         params: {
             code,
             date: date.toISOString()
@@ -113,7 +69,7 @@ export async function fetchStability(code: string, date: Date) {
 }
 
 export async function fetchRates(code: string, start: Date, end: Date) {
-    const response = await api.get<Api.Rates>('rates', {
+    const response = await api.get<Api.Rates>(routes.ANALYSIS_RATES.replace('code', code), {
         params: {
             code,
             start: start.toISOString(),
@@ -124,7 +80,7 @@ export async function fetchRates(code: string, start: Date, end: Date) {
 }
 
 export async function fetchPredictionRates(code: string) {
-    const response = await api.get<Api.PredictionRates>("prediction/rates", {
+    const response = await api.get<Api.PredictionRates>(routes.ANALYSIS_PREDICTION_RATES.replace('code', code), {
         params: {
             code
         }
