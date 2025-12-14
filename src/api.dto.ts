@@ -3,6 +3,9 @@ export namespace Api {
         start: string;
         end: string;
     }
+    export interface LoginResponse {
+        token: string;
+    }
     export interface GlobalRates {
         timestamp: string;
         rates: {

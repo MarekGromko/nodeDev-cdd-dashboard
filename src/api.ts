@@ -5,6 +5,7 @@ import type { Api } from "./api.dto";
 export type { Api };
 
 export const routes = {
+    LOGIN:                      'users/login',
     ANALYSIS_GLOBAL_RATES:      'analysis/global/rates',
     ANALYSIS_GLOBAL_DELTAS:     'analysis/global/deltas',
     ANALYSIS_GLOBAL_STABILITY:  'analysis/global/stability',
@@ -84,6 +85,15 @@ export async function fetchPredictionRates(code: string) {
         params: {
             code
         }
+    });
+    return response.data;
+}
+
+// login //
+export async function login(email: string, password: string) {
+    const response = await api.post<Api.LoginResponse>(routes.LOGIN, {
+        email,
+        password
     });
     return response.data;
 }
