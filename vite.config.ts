@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import fs from 'fs';
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite';
@@ -9,8 +10,8 @@ import tailwindcss from '@tailwindcss/vite';
 let https: any = false;
 if (process.env.VITE_USE_HTTPS === 'true') {
     https = {
-        key:  process.env.VITE_HTTPS_KEY_PATH,
-        cert: process.env.VITE_HTTPS_CERT_PATH,
+        key:  fs.readFileSync(process.env.VITE_HTTPS_KEY_PATH),
+        cert: fs.readFileSync(process.env.VITE_HTTPS_CERT_PATH),
     }
 }
 

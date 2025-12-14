@@ -69,7 +69,6 @@ export default function CurrencyRates(props: CurrencyRatesProps) {
         <div>
             <div className="text-lg font-bold m-2">Currency rates for {props.code}</div>
             <select defaultValue="month" className="select p-0 px-4 w-28 h-12" onChange={x=> setTimeframe(x.target.value)}>
-                <option value="week">Week</option>
                 <option value="month">Month</option>
                 <option value="halfyear">Half year</option>
                 <option value="year">Year</option>

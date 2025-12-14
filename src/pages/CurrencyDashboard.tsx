@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { currencyList } from "../data/currencies";
 import { getCurrencyFlag } from "../data/flags";
-import { useSearchParams } from "react-router";
+import { useSearchParams, Link } from "react-router";
 import CurrencyInfo from "../components/graphs/CurrencyInfo";
 import CurrencyRates from "../components/graphs/CurrencyRates";
 import CurrencyPredictionRates from "../components/graphs/CurrencyPredictionRates";
@@ -33,7 +33,10 @@ export default function GlobalDashboard() {
                         .map(currency => {
                             return (
                                 <li key={currency.code}>
-                                    <a href={`?code=${currency.code}`}>{getCurrencyFlag(currency.code)} - {currency.code}</a>
+                                    <Link 
+                                        to={`?code=${currency.code}`}>
+                                        {getCurrencyFlag(currency.code)} - {currency.code}
+                                    </Link>
                                 </li>
                             )
                         })
