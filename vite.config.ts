@@ -10,8 +10,8 @@ import tailwindcss from '@tailwindcss/vite';
 let https: any = false;
 if (process.env.VITE_USE_HTTPS === 'true') {
     https = {
-        key:  fs.readFileSync(process.env.VITE_HTTPS_KEY_PATH),
-        cert: fs.readFileSync(process.env.VITE_HTTPS_CERT_PATH),
+        key:  fs.readFileSync(process.env.VITE_HTTPS_KEY_PATH as string),
+        cert: fs.readFileSync(process.env.VITE_HTTPS_CERT_PATH as string),
     }
 }
 
@@ -19,6 +19,7 @@ if (process.env.VITE_USE_HTTPS === 'true') {
 // https://vite.dev/config/
 export default defineConfig({
     server: {
+        hmr: process.env.VITE_NO_HMR == 'true' ? false : true,
         port: Number(process.env.VITE_SERVER_PORT) ?? 8080,
         https,
         proxy: {
