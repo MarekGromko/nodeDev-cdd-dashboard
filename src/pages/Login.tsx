@@ -1,4 +1,4 @@
-import { useState, type FormEventHandler } from "react";
+import { useState } from "react";
 import { login } from "../api";
 import type { AxiosError } from "axios";
 
