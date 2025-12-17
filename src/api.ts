@@ -17,11 +17,21 @@ export const routes = {
 
 const api = axios.create({baseURL: import.meta.env.VITE_API_BASE_URL || '/api'});
 
+const getAuthHeader = () => {
+    const token = localStorage.getItem('authToken');
+    if(!token) return {};
+    return {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }
+}
 //mockApi(api);
 
 // global api //
 export async function fetchGlobalRates(date: Date) {
     const response = await api.get<Api.GlobalRates>(routes.ANALYSIS_GLOBAL_RATES, {
+        ...getAuthHeader(),
         params: {
             date: date.toISOString()
         }
@@ -31,6 +41,7 @@ export async function fetchGlobalRates(date: Date) {
 
 export async function fetchGlobalDeltas(start: Date, end: Date) {
     const response = await api.get<Api.GlobalDeltas>(routes.ANALYSIS_GLOBAL_DELTAS, {
+        ...getAuthHeader(),
         params: {
             start: start.toISOString(),
             end: end.toISOString()
@@ -41,6 +52,7 @@ export async function fetchGlobalDeltas(start: Date, end: Date) {
 
 export async function fetchGlobalStability(date: Date) {
     const response = await api.get<Api.GlobalStability>(routes.ANALYSIS_GLOBAL_STABILITY, {
+        ...getAuthHeader(),
         params: {
             date: date.toISOString()
         }
@@ -51,6 +63,7 @@ export async function fetchGlobalStability(date: Date) {
 // currencu api //
 export async function fetchRate(code: string, date: Date) {
     const response = await api.get<Api.Rate>(routes.ANALYSIS_RATE.replace('code', code), {
+        ...getAuthHeader(),
         params: {
             code,
             date: date.toISOString()
@@ -61,6 +74,7 @@ export async function fetchRate(code: string, date: Date) {
 
 export async function fetchStability(code: string, date: Date) {
     const response = await api.get<Api.Stability>(routes.ANALYSIS_STABILITY.replace('code', code), {
+        ...getAuthHeader(),
         params: {
             code,
             date: date.toISOString()
@@ -71,6 +85,7 @@ export async function fetchStability(code: string, date: Date) {
 
 export async function fetchRates(code: string, start: Date, end: Date) {
     const response = await api.get<Api.Rates>(routes.ANALYSIS_RATES.replace('code', code), {
+        ...getAuthHeader(),
         params: {
             code,
             start: start.toISOString(),
@@ -82,6 +97,7 @@ export async function fetchRates(code: string, start: Date, end: Date) {
 
 export async function fetchPredictionRates(code: string) {
     const response = await api.get<Api.PredictionRates>(routes.ANALYSIS_PREDICTION_RATES.replace('code', code), {
+        ...getAuthHeader(),
         params: {
             code
         }
